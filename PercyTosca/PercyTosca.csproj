@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7DAB304C-6B13-463D-9128-C4C1BE61CA4C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PercyTosca</RootNamespace>
+    <AssemblyName>PercyTosca</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tricentis.Automation.AgentContracts">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.AgentContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Api.Core">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Api.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Api.Engine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Api.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Api.Engine.Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Api.Engine.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Api.Engine.Core">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Api.Engine.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ARA">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.ARA.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ARALauncher">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.ARALauncher.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.AutomationTools">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.AutomationTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ChromeEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.ChromeEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ChromeXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.ChromeXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DatabaseEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.DatabaseEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DatabaseServer">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.DatabaseServer.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DatabaseServer64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.DatabaseServer64.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DotNetEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.DotNetEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DotNetHookAssemblyResolver">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.DotNetHookAssemblyResolver.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DotNetServer32">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.DotNetServer32.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DotNetServer64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.DotNetServer64.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.DotNetXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.DotNetXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.EdgeEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.EdgeEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.EdgeXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.EdgeXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.EngineHelper">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.EngineHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ExcelEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.ExcelEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ExcelUiEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.ExcelUiEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.FFEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.FFEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.FFXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.FFXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.FileEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.FileEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HostEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.HostEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HostServer32">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.HostServer32.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HostServer64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.HostServer64.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HostServerCommon">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.HostServerCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HostXScan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.HostXScan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HtmlEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.HtmlEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HtmlEngineContracts">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.HtmlEngineContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.HtmlXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.HtmlXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.IEEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.IEEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.IEServer">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.IEServer.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.IEXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.IEXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Interaction">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Interaction.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaAwt.OracleEbs">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaAwt.OracleEbs.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaAwtEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaAwtEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaFxEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaFxEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaServerX64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.JavaServerX64.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaServerX86">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.JavaServerX86.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaSwingEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaSwingEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaSwtEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaSwtEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JavaXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.JavaXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.JsonEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.JsonEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.MailEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.MailEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Mobile30Engine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Mobile30Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Mobile30Html">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Mobile30Html.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Mobile30HtmlXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Mobile30HtmlXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Mobile30Native">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Mobile30Native.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Mobile30Server">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Mobile30Server.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Mobile30XScan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Mobile30XScan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.MSHTMLWrapper">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.MSHTMLWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.OCRWrapper">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.OCRWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.OptIntEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.OptIntEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.OptIntXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.OptIntXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.PdfEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.PdfEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.PdfXScan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.PdfXScan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Platforms.Windows">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Platforms.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.PrimitiveValuesEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.PrimitiveValuesEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.PuttyEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.PuttyEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.RecorderScan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.RecorderScan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.RecorderUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.RecorderUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.RelayService">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.RelayService.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Remoting">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Remoting.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Rescan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Rescan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.RescanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.RescanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Resources">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Salesforce.Classic">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.Salesforce.Classic.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Salesforce.Common">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.Salesforce.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Salesforce.Lightning">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.Salesforce.Lightning.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPAC">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPAC.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPCRM">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPCRM.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPHTMLHelper">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPHTMLHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPLogon">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPLogon.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPNW">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPNW.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPNWXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPNWXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPSF">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPSF.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPUI5">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SAP.SAPUI5.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SAP.SAPUI5Mobile">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.SAP.SAPUI5Mobile.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SapEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SapEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SapServer">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.SapServer.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SapXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SapXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ServerInjectorX64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.ServerInjectorX64.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.ServerInjectorX86">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.ServerInjectorX86.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.SiebelOUIControls">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.SiebelOUIControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.TableCompare">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.TableCompare.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.TextStreamEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.TextStreamEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Transitions">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Transitions.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.UiaBase">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.UiaBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.UiaEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.UiaEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.UIAXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.UIAXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.UpdateService">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.UpdateService.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WebDriverEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WebDriverEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WebDriverRescan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WebDriverRescan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WebDriverServer">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WebDriverServer.exe</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WebDriverXScan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WebDriverXScan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WebDriverXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WebDriverXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.Win32Base">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.Win32Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinFormsEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WinFormsEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinFormsServerX64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WinFormsServerX64.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinFormsServerX86">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WinFormsServerX86.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinXEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WinXEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinXServerX64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WinXServerX64.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinXServerX86">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WinXServerX86.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WinXXScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WinXXScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WPFEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Engines\Tricentis.Automation.WPFEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WPFServerX64">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WPFServerX64.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.WPFServerX86">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.WPFServerX86.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.XmlEngine">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.XmlEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.XScan">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.XScan.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.XScanApi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.XScanApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Automation.XScanUi">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Automation.XScanUi.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.AutomationBase">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.AutomationBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.AutomationObjects">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.AutomationObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Common.AgentLoadingSplashScreen">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Common.AgentLoadingSplashScreen.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Common.AssemblyPreLoader">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Common.AssemblyPreLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Tricentis.Common.Compliance">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\TRICENTIS\Tosca Testsuite\TBox\Tricentis.Common.Compliance.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PercyTosca.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
