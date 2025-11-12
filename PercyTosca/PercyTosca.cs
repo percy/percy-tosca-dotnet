@@ -122,7 +122,7 @@ namespace ToscaPercySnapshot
                 dynamic domSnapshot = null;
                 domSnapshot = getSerializedDom(browser, snapshotOptions);
 
-                snapshotOptions.Add("clientInfo", "dot-net");
+                snapshotOptions.Add("clientInfo", "percy-tosca");
                 snapshotOptions.Add("environmentInfo", "Tosca");
                 snapshotOptions.Add("domSnapshot", domSnapshot);
                 snapshotOptions.Add("url", browser.EntryPoint.GetJavaScriptResult("return document.URL"));
@@ -254,7 +254,7 @@ namespace ToscaPercySnapshot
 
         private static void Log<T>(T message, string level = "info")
         {
-            string label = DEBUG ? "percy:dotnet" : "percy";
+            string label = DEBUG ? "percy:tosca" : "percy";
             string labeledMessage = $"[\u001b[35m{label}\u001b[39m] {message}";
             try
             {
