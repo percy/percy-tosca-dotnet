@@ -26,9 +26,6 @@ namespace ToscaPercySnapshot
     {
         public static readonly bool DEBUG = Environment.GetEnvironmentVariable("PERCY_LOGLEVEL") == "debug";
         private static HttpClient _http;
-        private static string sessionType = null;
-        private static object eligibleWidths;
-        private static object cliConfig;
         public static readonly string CLI_API = Environment.GetEnvironmentVariable("PERCY_CLI_API") ?? "http://localhost:5338";
         // The default path is typically C:\Users\<username>\AppData\Local\Temp
         public static readonly string LOG_DIR = Path.GetTempPath();
