@@ -1,6 +1,6 @@
 # PercyTosca
 
-PercyTosca is a .NET project that produces a distributable assembly (`PercyTosca.dll`) which can be used in Tosca for calling PercySnapshot.
+PercyTosca is a .NET project that produces a distributable assembly (`PercyTosca<Version>.dll`) which can be used in Tosca for calling PercySnapshot.
 
 ## Development
 
