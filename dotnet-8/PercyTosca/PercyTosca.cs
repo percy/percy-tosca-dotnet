@@ -6,7 +6,6 @@ using Tricentis.Automation.Engines;
 using Tricentis.Automation.Engines.Adapters.Attributes;
 using Tricentis.Automation.Engines.SpecialExecutionTasks;
 using Tricentis.Automation.Engines.SpecialExecutionTasks.Attributes;
-using Tricentis.Automation.Engines.SpecialExecutionTasks.Html;
 using Tricentis.Automation.Engines.Technicals.Html;
 using Percy.CustomJSExecutor;
 [assembly: EngineId("Percy")]
@@ -19,7 +18,7 @@ namespace ToscaPercySnapshot
     {
         public static readonly bool DEBUG = Environment.GetEnvironmentVariable("PERCY_LOGLEVEL") == "debug";
         private static HttpClient _http;
-        private CustomJSExecutor customJS;
+        private CustomJSExecutor customJSExecutor;
         public static readonly string CLI_API = Environment.GetEnvironmentVariable("PERCY_CLI_API") ?? "http://localhost:5338";
         // The default path is typically C:\Users\<username>\AppData\Local\Temp
         public static readonly string LOG_DIR = Path.GetTempPath();
@@ -29,12 +28,17 @@ namespace ToscaPercySnapshot
         private static bool? _enabled = null;
 
         public ToscaPercySnapshot(Tricentis.Automation.Creation.Validator validator) : base(validator) {
-            this.customJS = new CustomJSExecutor(validator);
+            this.customJSExecutor = new CustomJSExecutor(validator);
         }
 
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)
         {
             string snapshotName = testAction.GetParameterAsInputValue("SnapshotName", true)?.Value?.ToString();
+            string caption = testAction.GetParameterAsInputValue("Caption", true)?.Value?.ToString();
+            if (caption == null)
+            {
+                caption = "*";
+            }
             Log($"Starting Execution for snapshot, {snapshotName}");
 
             if (!Enabled())
@@ -92,7 +96,7 @@ namespace ToscaPercySnapshot
                 {
                     try
                     {
-                        browser = customJS.GetHtmlDocumentFromCaption("*", testAction);
+                        browser = customJSExecutor.GetHtmlDocumentFromCaption(caption, testAction);
                         if (browser != null)
                             break;
                         Thread.Sleep(delay);
