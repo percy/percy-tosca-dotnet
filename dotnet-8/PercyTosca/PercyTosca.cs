@@ -8,6 +8,7 @@ using Tricentis.Automation.Engines.SpecialExecutionTasks;
 using Tricentis.Automation.Engines.SpecialExecutionTasks.Attributes;
 using Tricentis.Automation.Engines.SpecialExecutionTasks.Html;
 using Tricentis.Automation.Engines.Technicals.Html;
+using Percy.CustomJSExecutor;
 [assembly: EngineId("Percy")]
 
 namespace ToscaPercySnapshot
@@ -18,7 +19,7 @@ namespace ToscaPercySnapshot
     {
         public static readonly bool DEBUG = Environment.GetEnvironmentVariable("PERCY_LOGLEVEL") == "debug";
         private static HttpClient _http;
-        private static ExecuteJavaScriptBase executeJavaScriptBase;
+        private CustomJSExecutor customJS;
         public static readonly string CLI_API = Environment.GetEnvironmentVariable("PERCY_CLI_API") ?? "http://localhost:5338";
         // The default path is typically C:\Users\<username>\AppData\Local\Temp
         public static readonly string LOG_DIR = Path.GetTempPath();
@@ -27,7 +28,9 @@ namespace ToscaPercySnapshot
         private static IHtmlDocumentTechnical browser = null;
         private static bool? _enabled = null;
 
-        public ToscaPercySnapshot(Tricentis.Automation.Creation.Validator validator) : base(validator) { }
+        public ToscaPercySnapshot(Tricentis.Automation.Creation.Validator validator) : base(validator) {
+            this.customJS = new CustomJSExecutor(validator);
+        }
 
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)
         {
@@ -89,7 +92,7 @@ namespace ToscaPercySnapshot
                 {
                     try
                     {
-                        browser = executeJavaScriptBase.GetHtmlDocumentFromCaption("*", testAction);
+                        browser = customJS.GetHtmlDocumentFromCaption("*", testAction);
                         if (browser != null)
                             break;
                         Thread.Sleep(delay);
