@@ -13,5 +13,6 @@ jobs:
         with:
           files: |
             ./dotnet-4.8/PercyTosca_v4_8.dll
+            ./dotnet-8/PercyTosca_v8.dll
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
