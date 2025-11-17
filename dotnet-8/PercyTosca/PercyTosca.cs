@@ -18,7 +18,7 @@ namespace ToscaPercySnapshot
     {
         public static readonly bool DEBUG = Environment.GetEnvironmentVariable("PERCY_LOGLEVEL") == "debug";
         private static HttpClient _http;
-        private CustomJSExecutor customJSExecutor;
+        private readonly CustomJSExecutor customJSExecutor;
         public static readonly string CLI_API = Environment.GetEnvironmentVariable("PERCY_CLI_API") ?? "http://localhost:5338";
         // The default path is typically C:\Users\<username>\AppData\Local\Temp
         public static readonly string LOG_DIR = Path.GetTempPath();
@@ -45,11 +45,13 @@ namespace ToscaPercySnapshot
             {
                 Log($"Percy is not running!");
                 testAction.SetResult(new UnknownFailedActionResult("Percy is not running!"));
+                return testAction.Result;
             }
             if (string.IsNullOrEmpty(snapshotName))
             {
                 Log($"SnapshotName cannot be empty!");
                 testAction.SetResult(new UnknownFailedActionResult("SnapshotName cannot be empty!"));
+                return testAction.Result;
             }
 
             try
@@ -85,7 +87,7 @@ namespace ToscaPercySnapshot
                     snapshotOptions.Add("widths", widthsList);
                 }
 
-                AddIfNotNull(snapshotOptions, "minHeight", minHeight);
+                snapshotOptions.Add("minHeight", minHeight);
                 AddIfNotNull(snapshotOptions, "scope", scope);
                 AddIfNotNull(snapshotOptions, "percyCSS", percyCSS);
                 AddIfNotNull(snapshotOptions, "enableJavascript", enableJavascript);
@@ -111,6 +113,7 @@ namespace ToscaPercySnapshot
                 {
                     Log($"Browser not found!");
                     testAction.SetResult(new UnknownFailedActionResult("Browser not found!"));
+                    return testAction.Result;
                 }
 
                 string script = GetPercyDOM();
@@ -184,16 +187,9 @@ namespace ToscaPercySnapshot
 
         private static void writeLog(string msg)
         {
-            try
+            using (StreamWriter writer = new StreamWriter(LOG_PATH, append: true))
             {
-                using (StreamWriter writer = new StreamWriter(LOG_PATH, append: true))
-                {
-                    writer.WriteLine(msg);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                writer.WriteLine(msg);
             }
         }
 
