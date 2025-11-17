@@ -44,14 +44,12 @@ namespace ToscaPercySnapshot
             if (!Enabled())
             {
                 Log($"Percy is not running!");
-                testAction.SetResult(new UnknownFailedActionResult("Percy is not running!"));
-                return testAction.Result;
+                return (ActionResult)new UnknownFailedActionResult("Percy is not running!");
             }
             if (string.IsNullOrEmpty(snapshotName))
             {
                 Log($"SnapshotName cannot be empty!");
-                testAction.SetResult(new UnknownFailedActionResult("SnapshotName cannot be empty!"));
-                return testAction.Result;
+                return (ActionResult)new UnknownFailedActionResult("SnapshotName cannot be empty!");
             }
 
             try
@@ -112,8 +110,7 @@ namespace ToscaPercySnapshot
                 if (browser == null)
                 {
                     Log($"Browser not found!");
-                    testAction.SetResult(new UnknownFailedActionResult("Browser not found!"));
-                    return testAction.Result;
+                    return (ActionResult)new UnknownFailedActionResult("Browser not found!");
                 }
 
                 string script = GetPercyDOM();
