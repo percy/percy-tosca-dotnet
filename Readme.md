@@ -36,7 +36,7 @@ The snapshot method arguments:
 - `SnapshotName` (**required**) - The snapshot name; must be unique to each snapshot
 - Additional snapshot options (overrides any project options):
   - `Caption` - Title of your webpage (Default: "*") [string]
-  - `Widths` - Comma seprated integer values to take screenshots at
+  - `Widths` - Comma seperated integer values to take screenshots at
   - `MinHeight` - The minimum viewport height to take screenshots at [integer]
   - `EnableJavaScript` - Enable JavaScript in Percy's rendering environment [boolean]
   - `PercyCSS` - Percy specific CSS only applied in Percy's rendering [boolean]
