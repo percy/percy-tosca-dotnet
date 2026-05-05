@@ -26,6 +26,7 @@ namespace ToscaPercySnapshot
         private static string _dom = null;
         private static IHtmlDocumentTechnical browser = null;
         private static bool? _enabled = null;
+        private static JsonElement? _cliConfig = null;
 
         public ToscaPercySnapshot(Tricentis.Automation.Creation.Validator validator) : base(validator) {
             this.customJSExecutor = new CustomJSExecutor(validator);
@@ -116,8 +117,11 @@ namespace ToscaPercySnapshot
                 string script = GetPercyDOM();
                 browser.EntryPoint.ExecuteJavaScriptInDocument(browser, script);
 
+                // Merge .percy.yml config options with snapshot options (snapshot options take priority)
+                var mergedOptions = MergeSnapshotOptions(snapshotOptions);
+
                 dynamic domSnapshot = null;
-                domSnapshot = getSerializedDom(browser, snapshotOptions);
+                domSnapshot = getSerializedDom(browser, mergedOptions);
 
                 snapshotOptions.Add("clientInfo", "percy-tosca");
                 snapshotOptions.Add("environmentInfo", "Tosca");
@@ -171,6 +175,8 @@ namespace ToscaPercySnapshot
                 }
                 else
                 {
+                    if (data.TryGetProperty("config", out JsonElement configElement))
+                        _cliConfig = configElement;
                     return (bool)(_enabled = true);
                 }
             }
@@ -265,6 +271,31 @@ namespace ToscaPercySnapshot
             if (_dom != null) return (string)_dom;
             _dom = Request("/percy/dom.js").content;
             return (string)_dom;
+        }
+
+        private static Dictionary<string, object> MergeSnapshotOptions(Dictionary<string, object> options)
+        {
+            var merged = new Dictionary<string, object>();
+            if (_cliConfig.HasValue &&
+                _cliConfig.Value.ValueKind == JsonValueKind.Object &&
+                _cliConfig.Value.TryGetProperty("snapshot", out JsonElement snapshotElement) &&
+                snapshotElement.ValueKind == JsonValueKind.Object)
+            {
+                foreach (JsonProperty prop in snapshotElement.EnumerateObject())
+                {
+                    merged[prop.Name] = prop.Value.ValueKind switch
+                    {
+                        JsonValueKind.True => true,
+                        JsonValueKind.False => false,
+                        JsonValueKind.Number => prop.Value.TryGetInt32(out int intVal) ? intVal : (object)prop.Value.GetDouble(),
+                        JsonValueKind.String => prop.Value.GetString(),
+                        _ => prop.Value
+                    };
+                }
+            }
+            foreach (var kvp in options)
+                merged[kvp.Key] = kvp.Value;
+            return merged;
         }
 
         private static dynamic getSerializedDom(IHtmlDocumentTechnical browser, Dictionary<string, object> options)
