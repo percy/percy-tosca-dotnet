@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  core-coverage:
+    name: Core unit tests + 100% line coverage gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore dotnet-8/PercyTosca.Core.sln
+
+      - name: Test with 100% line coverage gate
+        run: >
+          dotnet test dotnet-8/PercyTosca.Core.sln
+          --no-restore
+          /p:CollectCoverage=true
+          /p:CoverletOutputFormat=cobertura
+          /p:ThresholdType=line
+          /p:Threshold=100
