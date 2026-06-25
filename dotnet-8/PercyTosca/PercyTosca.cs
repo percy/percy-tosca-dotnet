@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Tricentis.Automation.AutomationInstructions.TestActions;
 using Tricentis.Automation.Creation.Attributes;
 using Tricentis.Automation.Engines;
@@ -8,6 +7,7 @@ using Tricentis.Automation.Engines.SpecialExecutionTasks;
 using Tricentis.Automation.Engines.SpecialExecutionTasks.Attributes;
 using Tricentis.Automation.Engines.Technicals.Html;
 using Percy.CustomJSExecutor;
+using PercyTosca.Core;
 [assembly: EngineId("Percy")]
 
 namespace ToscaPercySnapshot
@@ -27,6 +27,8 @@ namespace ToscaPercySnapshot
         private static IHtmlDocumentTechnical browser = null;
         private static bool? _enabled = null;
         private static JsonElement? _cliConfig = null;
+        // Tosca-free HTTP/version-gate logic lives in PercyTosca.Core and is delegated to below.
+        private static PercyClient _percyClient;
 
         public ToscaPercySnapshot(Tricentis.Automation.Creation.Validator validator) : base(validator) {
             this.customJSExecutor = new CustomJSExecutor(validator);
@@ -55,41 +57,16 @@ namespace ToscaPercySnapshot
 
             try
             {
-                Dictionary<string, object> snapshotOptions = new Dictionary<string, object>();
-                List<int> widthsList = new List<int>();
-
                 string minHeightString = testAction.GetParameterAsInputValue("MinHeight", true)?.Value?.ToString();
-                int minHeight = int.TryParse(minHeightString, out int parsedValue) ? parsedValue : 1024;
+                int minHeight = PercyOptions.ParseMinHeight(minHeightString);
                 string scope = testAction.GetParameterAsInputValue("ScopeSelector", true)?.Value?.ToString();
                 string percyCSS = testAction.GetParameterAsInputValue("PercyCSS", true)?.Value?.ToString();
                 bool enableJavascript = Convert.ToBoolean(testAction.GetParameterAsInputValue("EnableJavascript", true)?.Value);
                 string widthsString = testAction.GetParameterAsInputValue("Widths", true)?.Value?.ToString();
 
-                if (!string.IsNullOrEmpty(widthsString))
-                {
-                    widthsList = widthsString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                             .Select(w =>
-                                             {
-                                                 if (int.TryParse(w.Trim(), out int val))
-                                                 {
-                                                     return (int?)val;
-                                                 }
-                                                 return null;
-                                             })
-                                             .Where(v => v.HasValue)
-                                             .Select(v => v.Value)
-                                             .ToList();
-                }
-
-                if (widthsList.Count > 0)
-                {
-                    snapshotOptions.Add("widths", widthsList);
-                }
-
-                snapshotOptions.Add("minHeight", minHeight);
-                AddIfNotNull(snapshotOptions, "scope", scope);
-                AddIfNotNull(snapshotOptions, "percyCSS", percyCSS);
-                AddIfNotNull(snapshotOptions, "enableJavascript", enableJavascript);
+                List<int> widthsList = PercyOptions.ParseWidths(widthsString);
+                Dictionary<string, object> snapshotOptions =
+                    PercyOptions.BuildSnapshotOptions(widthsList, minHeight, scope, percyCSS, enableJavascript);
 
                 int retryCount = 10;
                 int delay = 1000;
@@ -123,11 +100,11 @@ namespace ToscaPercySnapshot
                 dynamic domSnapshot = null;
                 domSnapshot = getSerializedDom(browser, mergedOptions);
 
-                snapshotOptions.Add("clientInfo", "percy-tosca");
-                snapshotOptions.Add("environmentInfo", "Tosca");
-                snapshotOptions.Add("domSnapshot", domSnapshot);
-                snapshotOptions.Add("url", browser.EntryPoint.GetJavaScriptResult("return document.URL"));
-                snapshotOptions.Add("name", snapshotName);
+                PercyOptions.AddSnapshotMetadata(
+                    snapshotOptions,
+                    domSnapshot,
+                    browser.EntryPoint.GetJavaScriptResult("return document.URL"),
+                    snapshotName);
 
                 Request("/percy/snapshot", snapshotOptions);
             }
@@ -139,53 +116,17 @@ namespace ToscaPercySnapshot
             return new PassedActionResult("Snapshot Taken!");
         }
 
-        private void AddIfNotNull(Dictionary<string, object> options, string key, object value)
-        {
-            if (value != null)
-            {
-                options.Add(key, value);
-            }
-        }
-
         private static Func<bool> Enabled = () =>
         {
             if (_enabled != null) return (bool)_enabled;
 
-            try
-            {
-                dynamic res = Request("/percy/healthcheck");
-                dynamic data = JsonSerializer.Deserialize<dynamic>(res.content);
-
-                if (data.GetProperty("success").GetBoolean() != true)
-                {
-                    throw new Exception(data.error);
-                }
-                else if (res.version == null)
-                {
-                    Log("You may be using @percy/agent " +
-                        "which is no longer supported by this SDK. " +
-                        "Please uninstall @percy/agent and install @percy/cli instead. " +
-                        "https://www.browserstack.com/docs/percy/migration/migrate-to-cli");
-                    return (bool)(_enabled = false);
-                }
-                else if (res.version[0] != '1')
-                {
-                    Log($"Unsupported Percy CLI version, {res.version}");
-                    return (bool)(_enabled = false);
-                }
-                else
-                {
-                    if (data.TryGetProperty("config", out JsonElement configElement))
-                        _cliConfig = configElement;
-                    return (bool)(_enabled = true);
-                }
-            }
-            catch (Exception error)
-            {
-                Log("Percy is not running, disabling snapshots");
-                Log<Exception>(error, "debug");
-                return (bool)(_enabled = false);
-            }
+            // Delegate the version-gate logic to the Tosca-free Core, routing log output
+            // back through this class's Log helper.
+            _enabled = GetPercyClient().Enabled(msg => Log(msg));
+            // Capture the CLI-resolved .percy.yml config (PER-8053) so
+            // MergeSnapshotOptions can merge it with per-snapshot options.
+            _cliConfig = GetPercyClient().CliConfig;
+            return (bool)_enabled;
         };
 
         private static void writeLog(string msg)
@@ -212,40 +153,20 @@ namespace ToscaPercySnapshot
             return _http;
         }
 
-        private static string PayloadParser(object payload = null, bool alreadyJson = false)
+        // Builds (once) the Tosca-free Core client used for all CLI communication.
+        private static PercyClient GetPercyClient()
         {
-            if (alreadyJson)
+            if (_percyClient == null)
             {
-                return payload is null ? "" : payload.ToString();
+                _percyClient = new PercyClient(getHttpClient(), CLI_API);
             }
-            return JsonSerializer.Serialize(payload).ToString();
+
+            return _percyClient;
         }
 
-        private static dynamic Request(string endpoint, object payload = null, bool isJson = false)
+        private static PercyResponse Request(string endpoint, object payload = null, bool isJson = false)
         {
-            StringContent body = payload == null ? null : new StringContent(
-                PayloadParser(payload, isJson), Encoding.UTF8, "application/json");
-
-            HttpClient httpClient = getHttpClient();
-            Task<HttpResponseMessage> apiTask = body != null
-                ? httpClient.PostAsync($"{CLI_API}{endpoint}", body)
-                : httpClient.GetAsync($"{CLI_API}{endpoint}");
-            apiTask.Wait();
-
-            HttpResponseMessage response = apiTask.Result;
-            response.EnsureSuccessStatusCode();
-
-            Task<string> contentTask = response.Content.ReadAsStringAsync();
-            contentTask.Wait();
-
-            IEnumerable<string> version = null;
-            response.Headers.TryGetValues("x-percy-core-version", out version);
-
-            return new
-            {
-                version = version == null ? null : version.First(),
-                content = contentTask.Result
-            };
+            return GetPercyClient().Request(endpoint, payload, isJson);
         }
 
         private static void Log<T>(T message, string level = "info")
@@ -269,7 +190,7 @@ namespace ToscaPercySnapshot
         private static string GetPercyDOM()
         {
             if (_dom != null) return (string)_dom;
-            _dom = Request("/percy/dom.js").content;
+            _dom = Request("/percy/dom.js").Content;
             return (string)_dom;
         }
 
