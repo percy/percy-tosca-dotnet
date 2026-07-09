@@ -101,6 +101,22 @@ namespace PercyTosca.Core.Tests
         }
 
         [Fact]
+        public void Enabled_HealthyWithConfig_CapturesCliConfig()
+        {
+            var logs = new List<string>();
+            var (client, _) = BuildClient(_ => Ok(
+                "{\"success\":true,\"config\":{\"snapshot\":{\"widths\":[375]}}}", "1.27.0"));
+
+            bool enabled = client.Enabled(logs.Add);
+
+            Assert.True(enabled);
+            Assert.NotNull(client.CliConfig);
+            // The `config` object from the healthcheck is captured for SDKs to
+            // merge with per-snapshot options (PER-8053).
+            Assert.True(client.CliConfig.Value.TryGetProperty("snapshot", out _));
+        }
+
+        [Fact]
         public void Enabled_NullCoreVersion_LogsAgentWarningAndReturnsFalse()
         {
             var logs = new List<string>();
