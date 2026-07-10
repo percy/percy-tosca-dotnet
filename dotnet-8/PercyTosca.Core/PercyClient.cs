@@ -13,6 +13,13 @@ namespace PercyTosca.Core
         private readonly HttpClient _http;
         private readonly string _cliApi;
 
+        /// <summary>
+        /// The `config` object from the last successful healthcheck (the merged
+        /// .percy.yml the CLI resolved), or null if absent/unavailable. SDKs read
+        /// this to merge global config with per-snapshot options before serialize.
+        /// </summary>
+        public JsonElement? CliConfig { get; private set; }
+
         public PercyClient(HttpClient http, string cliApi)
         {
             _http = http;
@@ -81,6 +88,8 @@ namespace PercyTosca.Core
                 }
                 else
                 {
+                    if (data.TryGetProperty("config", out JsonElement configElement))
+                        CliConfig = configElement;
                     return true;
                 }
             }

@@ -26,6 +26,7 @@ namespace ToscaPercySnapshot
         private static string _dom = null;
         private static IHtmlDocumentTechnical browser = null;
         private static bool? _enabled = null;
+        private static JsonElement? _cliConfig = null;
         // Tosca-free HTTP/version-gate logic lives in PercyTosca.Core and is delegated to below.
         private static PercyClient _percyClient;
 
@@ -93,8 +94,11 @@ namespace ToscaPercySnapshot
                 string script = GetPercyDOM();
                 browser.EntryPoint.ExecuteJavaScriptInDocument(browser, script);
 
+                // Merge .percy.yml config options with snapshot options (snapshot options take priority)
+                var mergedOptions = MergeSnapshotOptions(snapshotOptions);
+
                 dynamic domSnapshot = null;
-                domSnapshot = getSerializedDom(browser, snapshotOptions);
+                domSnapshot = getSerializedDom(browser, mergedOptions);
 
                 PercyOptions.AddSnapshotMetadata(
                     snapshotOptions,
@@ -119,6 +123,9 @@ namespace ToscaPercySnapshot
             // Delegate the version-gate logic to the Tosca-free Core, routing log output
             // back through this class's Log helper.
             _enabled = GetPercyClient().Enabled(msg => Log(msg));
+            // Capture the CLI-resolved .percy.yml config (PER-8053) so
+            // MergeSnapshotOptions can merge it with per-snapshot options.
+            _cliConfig = GetPercyClient().CliConfig;
             return (bool)_enabled;
         };
 
@@ -185,6 +192,80 @@ namespace ToscaPercySnapshot
             if (_dom != null) return (string)_dom;
             _dom = Request("/percy/dom.js").Content;
             return (string)_dom;
+        }
+
+        private static Dictionary<string, object> MergeSnapshotOptions(Dictionary<string, object> options)
+        {
+            var merged = new Dictionary<string, object>();
+            if (_cliConfig.HasValue &&
+                _cliConfig.Value.ValueKind == JsonValueKind.Object &&
+                _cliConfig.Value.TryGetProperty("snapshot", out JsonElement snapshotElement) &&
+                snapshotElement.ValueKind == JsonValueKind.Object)
+            {
+                foreach (JsonProperty prop in snapshotElement.EnumerateObject())
+                {
+                    merged[prop.Name] = JsonElementToObject(prop.Value);
+                }
+            }
+            // Deep-merge per-snapshot options over the .percy.yml config:
+            // nested objects recurse (per-call wins at leaves); arrays/scalars replace.
+            merged = DeepMerge(merged, options);
+            return merged;
+        }
+
+        // Recursively converts a JsonElement into plain CLR objects:
+        // Object -> Dictionary<string, object> (recursive), Array -> List<object> (recursive),
+        // primitives as-is.
+        private static object JsonElementToObject(JsonElement el)
+        {
+            switch (el.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    var dict = new Dictionary<string, object>();
+                    foreach (JsonProperty prop in el.EnumerateObject())
+                        dict[prop.Name] = JsonElementToObject(prop.Value);
+                    return dict;
+                case JsonValueKind.Array:
+                    var list = new List<object>();
+                    foreach (JsonElement item in el.EnumerateArray())
+                        list.Add(JsonElementToObject(item));
+                    return list;
+                case JsonValueKind.True:
+                    return true;
+                case JsonValueKind.False:
+                    return false;
+                case JsonValueKind.Number:
+                    return el.TryGetInt32(out int intVal) ? intVal : (object)el.GetDouble();
+                case JsonValueKind.String:
+                    return el.GetString();
+                case JsonValueKind.Null:
+                    return null;
+                default:
+                    return el.GetRawText();
+            }
+        }
+
+        // Deep-merges overrideDict onto baseDict. When both sides hold a
+        // Dictionary<string, object> for the same key, recurse; otherwise the
+        // override value wins (arrays and scalars replace).
+        private static Dictionary<string, object> DeepMerge(Dictionary<string, object> baseDict, Dictionary<string, object> overrideDict)
+        {
+            var merged = new Dictionary<string, object>(baseDict);
+            if (overrideDict == null) return merged;
+            foreach (var kvp in overrideDict)
+            {
+                if (merged.TryGetValue(kvp.Key, out object existing) &&
+                    existing is Dictionary<string, object> existingDict &&
+                    kvp.Value is Dictionary<string, object> overrideValueDict)
+                {
+                    merged[kvp.Key] = DeepMerge(existingDict, overrideValueDict);
+                }
+                else
+                {
+                    merged[kvp.Key] = kvp.Value;
+                }
+            }
+            return merged;
         }
 
         private static dynamic getSerializedDom(IHtmlDocumentTechnical browser, Dictionary<string, object> options)
